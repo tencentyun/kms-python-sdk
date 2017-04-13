@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
         # encrypt the data string
         Plaintest = "test message data"
-        CiphertextBlob = kms_account.encrypt(kms_meta.KeyId, Plaintext)
+        CiphertextBlob = kms_account.encrypt(kms_meta.KeyId, Plaintest)
         print "the encrypted data is :%s \n" % CiphertextBlob
 
         # decrypt the encrypted data string
