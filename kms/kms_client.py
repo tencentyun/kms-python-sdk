@@ -175,6 +175,19 @@ class KMSClient:
         self.check_status(resp_inter)
         ret = json.loads(resp_inter.data) 
         return ret 
+    
+    def schedule_key_deletion(self, params):
+        resp_inter = self.request("ScheduleKeyDeletion", params)
+        self.check_status(resp_inter)
+        ret = json.loads(resp_inter.data) 
+        return ret 
+    def cancel_key_deletion(self, params):
+        resp_inter = self.request("CancelKeyDeletion", params)
+        self.check_status(resp_inter)
+        ret = json.loads(resp_inter.data) 
+        return ret 
+        
+        
 
     
     

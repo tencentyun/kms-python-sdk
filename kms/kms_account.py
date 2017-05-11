@@ -10,6 +10,7 @@
       date   author  description
 '''
 
+from Crypto.Cipher import AES
 from kms.kms_client import KMSClient
 from kms.kms_log import KMSLogger
 
@@ -272,6 +273,33 @@ class KMSAccount:
             params['limit'] = limit
         ret_pkg = self.kms_client.list_key(params)
         return (ret_pkg['totalCount'], ret_pkg['keys'])
+    
+    def schedule_key_deletion(self, KeyId, pendingWindowInDays):
+        
+        params = {
+            'KeyId':KeyId,
+            'pendingWindowInDays':pendingWindowInDays
+            }
+        self.kms_client.schedule_key_deletion(params)
+    
+    def cancel_key_deletion(self, KeyId):
+        
+        params = {
+            'KeyId':KeyId,
+            }
+        self.kms_client.cancel_key_deletion(params)
+    def encryptLocalAES(self, key, text):
+        crypto = AES.new(key, AES.MODE_CBC, iv=key)
+        length = 16
+        count = len(text)
+        add = count % length
+        if add:
+            text = text = ('\0' * (length - add))
+        return base64.b64encode(crypto.encrypt(text))
+        
+    def decryptLocalAES(self, key, text):
+        crypto = AES.new(key, AES.MODE_CBC, iv=key)
+        return crypto.decrypt(base64.b64decode(text)).rstrip('\0')
     
         
         
