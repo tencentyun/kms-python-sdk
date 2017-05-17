@@ -274,10 +274,11 @@ class KMSAccount:
         ret_pkg = self.kms_client.list_key(params)
         return (ret_pkg['totalCount'], ret_pkg['keys'])
     
+    
     def schedule_key_deletion(self, KeyId, pendingWindowInDays):
         
         params = {
-            'KeyId':KeyId,
+            'keyId':KeyId,
             'pendingWindowInDays':pendingWindowInDays
             }
         self.kms_client.schedule_key_deletion(params)
@@ -285,7 +286,7 @@ class KMSAccount:
     def cancel_key_deletion(self, KeyId):
         
         params = {
-            'KeyId':KeyId,
+            'keyId':KeyId,
             }
         self.kms_client.cancel_key_deletion(params)
     def encryptLocalAES(self, key, text):
