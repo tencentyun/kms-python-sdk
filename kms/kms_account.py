@@ -39,6 +39,7 @@ class KeyMetadata:
         self.KeyState = ""
         self.KeyUsage = ""
         self.Alias = ""
+        sesf.DeletetTime = 0
         
     def __str__(self):
         
@@ -47,7 +48,8 @@ class KeyMetadata:
                    "Description":self.Description,
                    "KeyState":self.KeyState,
                    "KeyUsage":self.KeyUsage,
-                   "Alias" : self.Alias}
+                   "Alias" : self.Alias,
+                   "DeleteTime":time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(self.DeleteTime))}
         
         return "\n".join(["%s: %s" % (k.ljust(30), v) for k, v in meta_info.items()])
         
@@ -109,6 +111,8 @@ class KMSAccount:
             key_meta.KeyUsage = resp['keyUsage']
         if 'alias' in resp.keys():
             key_meta.Alias = resp['alias']
+        if 'deleteTime' in resp.keys():
+            key_meta.DeleteTime = resp['deleteTime']
                    
     def create_key(self, Description=None, Alias="", KeyUsage='ENCRYPT/DECRYPT'):
         ''' create master key 
