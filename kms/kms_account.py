@@ -276,7 +276,14 @@ class KMSAccount:
     
     
     def schedule_key_deletion(self, KeyId, pendingWindowInDays):
-        
+        '''schedule key deletion 
+            @params            @description                       @type            @default     @value
+            input:
+            keyId             the custom keyId
+            pendingWindowInDays
+            return:
+            KMSExceptionBase  exception                           KMSException            
+        '''
         params = {
             'keyId':KeyId,
             'pendingWindowInDays':pendingWindowInDays
@@ -284,7 +291,13 @@ class KMSAccount:
         self.kms_client.schedule_key_deletion(params)
     
     def cancel_key_deletion(self, KeyId):
-        
+        '''cancel key deletion 
+            @params            @description                       @type            @default     @value
+            input:
+            keyId             the custom keyId
+            return:
+            KMSExceptionBase  exception                           KMSException            
+        '''
         params = {
             'keyId':KeyId,
             }

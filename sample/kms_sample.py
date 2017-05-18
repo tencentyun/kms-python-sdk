@@ -57,7 +57,11 @@ if __name__ == "__main__":
         # enable a custom key
         kms_account.enable_key(key_meta.KeyId)
 
+        # schedule deletion a custom key 
+        kms_account.schedule_key_deletion(key_meta.KeyId)
         
+        # cancel a custom key deletion 
+        kms_account.cancel_key_deletion(key_meta.KeyId)
 
         # list key
         totalCount, keys = kms_account.list_key()
