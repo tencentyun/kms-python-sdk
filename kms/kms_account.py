@@ -10,6 +10,7 @@
       date   author  description
 '''
 
+from Crypto.Cipher import AES
 from kms.kms_client import KMSClient
 from kms.kms_log import KMSLogger
 
@@ -38,6 +39,7 @@ class KeyMetadata:
         self.KeyState = ""
         self.KeyUsage = ""
         self.Alias = ""
+        self.DeleteTime = 0
         
     def __str__(self):
         
@@ -46,7 +48,8 @@ class KeyMetadata:
                    "Description":self.Description,
                    "KeyState":self.KeyState,
                    "KeyUsage":self.KeyUsage,
-                   "Alias" : self.Alias}
+                   "Alias" : self.Alias,
+                   "DeleteTime":time.strftime("%Y/%m/%d %H:%M:%S", time.localtime(self.DeleteTime))}
         
         return "\n".join(["%s: %s" % (k.ljust(30), v) for k, v in meta_info.items()])
         
@@ -108,6 +111,8 @@ class KMSAccount:
             key_meta.KeyUsage = resp['keyUsage']
         if 'alias' in resp.keys():
             key_meta.Alias = resp['alias']
+        if 'deleteTime' in resp.keys():
+            key_meta.DeleteTime = resp['deleteTime']
                    
     def create_key(self, Description=None, Alias="", KeyUsage='ENCRYPT/DECRYPT'):
         ''' create master key 
@@ -272,6 +277,47 @@ class KMSAccount:
             params['limit'] = limit
         ret_pkg = self.kms_client.list_key(params)
         return (ret_pkg['totalCount'], ret_pkg['keys'])
+    
+    
+    def schedule_key_deletion(self, KeyId, pendingWindowInDays):
+        '''schedule key deletion 
+            @params            @description                       @type            @default     @value
+            input:
+            keyId             the custom keyId
+            pendingWindowInDays
+            return:
+            KMSExceptionBase  exception                           KMSException            
+        '''
+        params = {
+            'keyId':KeyId,
+            'pendingWindowInDays':pendingWindowInDays
+            }
+        self.kms_client.schedule_key_deletion(params)
+    
+    def cancel_key_deletion(self, KeyId):
+        '''cancel key deletion 
+            @params            @description                       @type            @default     @value
+            input:
+            keyId             the custom keyId
+            return:
+            KMSExceptionBase  exception                           KMSException            
+        '''
+        params = {
+            'keyId':KeyId,
+            }
+        self.kms_client.cancel_key_deletion(params)
+    def encryptLocalAES(self, key, text):
+        crypto = AES.new(key, AES.MODE_CBC, iv=key)
+        length = 16
+        count = len(text)
+        add = count % length
+        if add:
+            text = text = ('\0' * (length - add))
+        return base64.b64encode(crypto.encrypt(text))
+        
+    def decryptLocalAES(self, key, text):
+        crypto = AES.new(key, AES.MODE_CBC, iv=key)
+        return crypto.decrypt(base64.b64decode(text)).rstrip('\0')
     
         
         
