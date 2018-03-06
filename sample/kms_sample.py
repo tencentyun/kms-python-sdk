@@ -58,7 +58,7 @@ if __name__ == "__main__":
         kms_account.enable_key(key_meta.KeyId)
 
         # schedule deletion a custom key 
-        kms_account.schedule_key_deletion(key_meta.KeyId)
+        kms_account.schedule_key_deletion(key_meta.KeyId, 7)
         
         # cancel a custom key deletion 
         kms_account.cancel_key_deletion(key_meta.KeyId)
