@@ -39,7 +39,7 @@ class KeyMetadata:
         self.KeyState = ""
         self.KeyUsage = ""
         self.Alias = ""
-        sesf.DeletetTime = 0
+        self.DeleteTime = 0
         
     def __str__(self):
         
